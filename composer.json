@@ -1,0 +1,21 @@
+{
+    "name": "inchoo-dev/module-opensearch-semantic-search-elasticsuite",
+    "description": "Elasticsuite integration for inchoo-dev/module-opensearch-semantic-search: hybrid semantic ranking on Elasticsuite search results and autocomplete.",
+    "type": "magento2-module",
+    "license": "OSL-3.0",
+    "require": {
+        "php": "~8.2.0||~8.3.0||~8.4.0",
+        "magento/framework": "^103.0.8",
+        "inchoo-dev/module-opensearch-semantic-search": "*",
+        "smile/elasticsuite": "^2.12",
+        "opensearch-project/opensearch-php": "^2.3"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "InchooDev\\OpensearchSemanticSearchElasticsuite\\": ""
+        }
+    }
+}

@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!--
+        Hybrid search. Elasticsuite builds every catalog request - search results page, GraphQL
+        product search, autocomplete - through this one mapper, so a global plugin gives all of them
+        the same ranking. Which requests are actually expanded is the gate's decision.
+    -->
+    <type name="Smile\ElasticsuiteCore\Search\Adapter\Elasticsuite\Request\Mapper">
+        <plugin name="inchoodev_opensearch_semantic_search_elasticsuite_hybrid_query"
+                type="InchooDev\OpensearchSemanticSearchElasticsuite\Plugin\Search\HybridQueryPlugin"
+                sortOrder="100"/>
+    </type>
+
+    <!--
+        The search box suggestions carry a shopper's term just like the results page does. Whether
+        they are expanded is switchable in configuration; see Model\Search\RequestInspector.
+    -->
+    <type name="InchooDev\OpensearchSemanticSearch\Model\Search\SemanticExpansionGate">
+        <arguments>
+            <argument name="supportedRequestNames" xsi:type="array">
+                <item name="elasticsuite_autocomplete" xsi:type="string">catalog_product_autocomplete</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!--
+        Elasticsuite reads the toolbar direction of a relevance sort the other way round from core:
+        "asc" is best match first (see Smile\ElasticsuiteCatalog\Block\Plugin\ResultPlugin). The base
+        module's toolbar fallback has to default to that direction, or a theme that relies on it
+        lists the weakest matches first.
+    -->
+    <type name="InchooDev\OpensearchSemanticSearch\Plugin\Search\ToolbarRelevanceOrderPlugin">
+        <arguments>
+            <argument name="bestFirstDirections" xsi:type="array">
+                <item name="elasticsuite" xsi:type="string">asc</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- With Elasticsuite in charge, the vector index lives on the cluster Elasticsuite is configured for. -->
+    <type name="InchooDev\OpensearchSemanticSearch\Model\OpenSearch\Connection\ConnectionProviderPool">
+        <arguments>
+            <argument name="providers" xsi:type="array">
+                <item name="elasticsuite" xsi:type="object">
+                    InchooDev\OpensearchSemanticSearchElasticsuite\Model\Connection\ConnectionProvider
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="InchooDev\OpensearchSemanticSearch\Model\Search\Engine\KeywordEnginePool">
+        <arguments>
+            <argument name="engines" xsi:type="array">
+                <item name="elasticsuite" xsi:type="object">
+                    InchooDev\OpensearchSemanticSearchElasticsuite\Model\Search\KeywordEngine
+                </item>
+            </argument>
+        </arguments>
+    </type>
+</config>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <inchoodev_opensearch_semantic_search>
+            <elasticsuite>
+                <autocomplete_enabled>1</autocomplete_enabled>
+            </elasticsuite>
+        </inchoodev_opensearch_semantic_search>
+    </default>
+</config>
